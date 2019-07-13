@@ -9,6 +9,8 @@ def exception(func):
     def wrapper(*args , **kwargs):
         try:return func( *args , **kwargs)
         except Exception as exp:
+            pass
+            '''
             error_title = type(exp).__name__
             error_code = str(exp)
             error_message = error_title + ': ' + error_code
@@ -25,6 +27,7 @@ def exception(func):
                 file.write('- ' * 10 + '\r\n')
                 file.write(error_message + '\r\n')
                 file.write('=' * 30 + '\r\n')
+                '''
     return wrapper
 
 class basic_scrapy(thr):

@@ -19,11 +19,12 @@ def Mobile01(max_mount,que,sem):
         @exception
         def run_content(self):
             while self.url and counter[0] < max_mount:
-                counter[0] += 1
                 soup = bs(get(self.url))
                 for i in findall(soup,'div',class_="single-post-content"):
                     mtext = get_mtext(i)
-                    if mtext:que.put((self.type,self.url,mtext))
+                    if mtext and len(mtext)>100:
+                        counter[0] += 1
+                        que.put((self.type,self.url,mtext))
                 self.url = get_nextpage(soup)
 
     soup = bs(get('https://www.mobile01.com/forum.php'))
@@ -33,7 +34,7 @@ def Mobile01(max_mount,que,sem):
             url = get_url(i)
             board(url,type_).start()
         else:
-            for j in i.find_all('li'):
+            for j in findall(i,'li'):
                 url = get_url(j)
                 if not url:continue
                 board(url,type_).start()#討論板爬蟲啟動
