@@ -16,7 +16,6 @@ def start(max_mount,que,sem):
             obj = self.type,self.url,get_mtext(web)
             que.put(obj)
             
-    @exception
     class newses(basic_scrapy):#各新聞串爬蟲
         @exception
         def run_content(self):
