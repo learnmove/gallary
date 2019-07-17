@@ -16,7 +16,7 @@ def newslist(soup_obj):
     for obj in result:
         
         #篩選條件:h3物件，裡面要有一個em物件，class是"tag c_news"
-        type_ = find(obj,'em', class_="tag c_news")
+        type_ = find(obj,'em', class_="tag")
         if type_:type_ = type_.text or "新聞"
         else:continue
         

@@ -7,8 +7,10 @@ from bs4 import BeautifulSoup as bs
 from random import randint as rd
 from threading import Thread as thr
 from time import sleep
+from basic_tools import *
 
-def ptt_scrapy(max_num_of_pieces,que,sem):
+@exception
+def start(max_num_of_pieces,que,sem):
     
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36'}
     mainurl = 'https://www.ptt.cc'
@@ -22,6 +24,11 @@ def ptt_scrapy(max_num_of_pieces,que,sem):
             self.type = type_
         def run(self):
             sem.acquire()#獲取旗標semephore，如果旗標數量不夠，執行緒會暫停直到拿到旗標
+            self.run_content()
+            sem.release()#旗標釋放
+            
+        @exception
+        def run_content(self):
             counter[0]+=1#執行緒開始時計數
             page = bs(req.get(self.url, headers = headers).text,'html.parser')
             Mtext = page.find('div',id = 'main-content')#如果文章不存在Mtext會是None，再.text會報錯，所以設if檢測
@@ -31,15 +38,12 @@ def ptt_scrapy(max_num_of_pieces,que,sem):
                 #※ 發信站: 批踢踢實業坊(ptt.cc), 來自: 27.52.126.188 (臺灣)
                 #如果沒有發信站三字代表文章被過度編輯，該文不適用
                 txt = re.split('\n+',Mtext.text)#re內的split切片功能，很強大，可以把匹配到的字元當成切割符做split
-                del_list = []
-                for i,v in enumerate(txt):
-                    if i>0 and 'http' in v : del_list.append(i-1)#排除掉內文的網址，-1是因為後面的切片開頭會切1，index會全部前推1
-                    if '發信站' in v:break#內文截取，排除後面的推文，break時i表示文章結束的下兩行，所以[1:i-1]
-                txt = txt[1:i-1]
-                for d in del_list[::-1]:del txt[d]#倒過來刪，這樣才不會動到index導致刪錯行
-                txt = ' '.join(txt)#放進queue時內文需是一個完整的string而非切片後的list
+                result=[]
+                for i,line in enumerate(txt):
+                    if i>0 and 'http' not in line : result.append(line)#排除掉內文的網址
+                    if '發信站' in line:break
+                txt = ' '.join(result)#放進queue時內文需是一個完整的string而非切片後的list
                 que.put((self.type,self.url,txt))
-            sem.release()#旗標釋放
             
     #此為各討論版塊的執行緒，負責找到文章連結並發配給article執行緒，執行翻頁，導入參數為網址跟討論版分類
     class board(thr):
@@ -47,6 +51,7 @@ def ptt_scrapy(max_num_of_pieces,que,sem):
             thr.__init__(self,name=url)
             self.url = url
             self.type = type_
+        @exception
         def run(self):
             while 1:#因為有設中斷條件了，所以直接無限迴圈
                 if counter[0] > max_num_of_pieces:break#中斷條件為counter計數，要是大於導入的變數則break
