@@ -17,7 +17,6 @@ def start(max_mount,que,sem):
             que.put(obj)
             
     @exception
-    
     class newses(basic_scrapy):#各新聞串爬蟲
         @exception
         def run_content(self):
