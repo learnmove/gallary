@@ -58,9 +58,8 @@ def date_generator():
         for i in range(1,41):
             yield daily_url + str(i) + '.htm' #輸出當日1~40所有分類的網址
         now -= 86400 #回推一天
-'''
+
 if __name__ == '__main__':
-    for i in date_generator():
-        print(i)
-    input()
-'''
+    web = bs(get('https://star.ettoday.net/news/1490374'))
+    print(get_mtext(web))
+

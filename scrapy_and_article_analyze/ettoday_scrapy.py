@@ -16,23 +16,33 @@ def start(max_mount,que,sem):
             obj = self.type,self.url,get_mtext(web)
             que.put(obj)
             
+    @exception
+    
     class newses(basic_scrapy):#各新聞串爬蟲
         @exception
-        def run_content(self):
+        def run(self):
             db = sql.connect('test.db')
             cs = db.cursor()
             web = bs(get(self.url))
-            if web : print('thread start.',self.url)
+            if not web : return
+            thr_list=[]
             for url,type_ in newslist(web):
                 cs.execute("select * from urls where url = '{}'".format(url))
                 result=cs.fetchone()
-                if not result:single_news(url,type_).start()
+                if not result:thr_list.append(single_news(url,type_))
+                if len(thr_list)>=10:
+                    for obj in thr_list:obj.start()
+                    for obj in thr_list:obj.join()
+                    thr_list=[]
             db.close()
+    thr_list=[]
     for url in date_generator():
         if counter[0] > max_mount:break
-    #for i in range(80):
-        print('send.',url)
-        newses(url,'').start()#各新聞串爬蟲啟動
+        thr_list.append(newses(url,''))#各新聞串爬蟲啟動
+        if len(thr_list)>=10:
+            for obj in thr_list:obj.start()
+            for obj in thr_list:obj.join()
+            thr_list=[]
 
     print('finish.')
 
