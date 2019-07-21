@@ -3,7 +3,6 @@ import re
 import copy
 import time
 import queue
-import sqlite3 as sql
 from threading import Semaphore as sm
 from threading import Thread as thr
 from time import sleep
@@ -18,6 +17,7 @@ def analyze(que_in,que_out):
     while 1:
         if que_in.empty():
             time.sleep(10)
+            continue
         type,url,txt=que_in.get()
         result = koten_analyze.start(txt)
         if not result:
@@ -29,8 +29,6 @@ def analyze(que_in,que_out):
 
 @exception
 def mp_analyze(que_in,que_out):
-    db = sql.connect('test.db')
-    cursor = db.cursor()
     que_check = queue.Queue()
     for _ in range(10):thr(target=analyze,args=(que_check,que_out)).start()
     while 1:
@@ -38,16 +36,8 @@ def mp_analyze(que_in,que_out):
             time.sleep(10)
             continue
         obj=que_in.get()
-        print(' '*79,end='\r')
-        print(obj[0],obj[1],end='\r')
-        cursor.execute("select * from urls where url = '{}'".format(obj[1]))
-        result=cursor.fetchone()
-        if not obj[2] or result or len(re.sub('[\Wa-zA-Z0-9_]+','',obj[2]))<200 :
-            print('\ndrop out.'+('find url.' if result else ''))
-            continue
+        if not obj[2] or len(re.sub('[\Wa-zA-Z0-9_]+','',obj[2]))<200 :continue
         que_check.put(obj)
-
-    db.close()
 
     
 
