@@ -31,10 +31,10 @@ if __name__=='__main__':
     
     thr(target=ettoday.start,args=(100000,que_scrapy,sem_scrapy)).start()
     print('scrapy already.')
-    time.sleep(30)
+    time.sleep(5)
     thr(target=mp_analyze,args=(que_scrapy,que_input)).start()
     print('analyze already.')
-    time.sleep(30)
+    time.sleep(5)
     print('go')
     
     while 1:
@@ -44,6 +44,12 @@ if __name__=='__main__':
                 print('\nmain input waiting..')
                 continue
         type,url,result = que_input.get()
+        print(' '*79,end='\r')
+        print(type,url,end='\r')
+        cursor.execute("select * from urls where url = '{}'".format(url))
+        if cursor.fetchone():
+            print('\ndrop out.find url.')
+            continue
         input_tempdic(temp_dic,category_dic[type],url,result)
         counter+=1
         if counter>=1000:
