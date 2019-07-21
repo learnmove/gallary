@@ -60,15 +60,15 @@ def get_mtext(soup_obj):#->str
     return result
 
 @exception
-def date_generator():
-    now = time.time()
+def date_generator(start_time=time.strftime("%Y-%m-%d", time.localtime())):
+    cur_time = time.mktime(time.strptime(start_time,"%Y-%m-%d"))
     newslist_url = mainurl + 'news/news-list-'
-    while now > 1317657600:#這串數字代表為2011-10-4，為ettoday最早的新聞開始
-        date = time.strftime("%Y-%m-%d-", time.localtime(now))
+    while cur_time > 1317657600:#這串數字代表為2011-10-4，為ettoday最早的新聞開始
+        date = time.strftime("%Y-%m-%d-", time.localtime(cur_time))
         daily_url = newslist_url + date
         for i in range(1,41):
             yield daily_url + str(i) + '.htm' #輸出當日1~40所有分類的網址
-        now -= 86400 #回推一天
+        cur_time -= 86400 #回推一天
 '''
 if __name__ == '__main__':
     for i in date_generator():
