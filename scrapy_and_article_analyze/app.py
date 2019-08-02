@@ -7,7 +7,10 @@ import plotly.graph_objs as go
 import os
 import sqlite3 as sql
 import re
-
+'''
+使用dash將爬完之資料庫結果呈現在網頁上
+網址:https://kotens-nltk.herokuapp.com/
+'''
 app = dash.Dash()
 
 db = sql.connect('test.db')
