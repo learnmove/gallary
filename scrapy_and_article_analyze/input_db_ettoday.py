@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-
+'''
+整合爬蟲程式跟分析關鍵字並輸入資料庫
+只要改import的爬蟲py檔
+再標誌好該網站對應的category(詳見category_dic)
+就可以開始作業
+'''
 import time
 import sqlite3 as sql
 from db_tools.db_functions import mp_analyze,input_tempdic,input_db
