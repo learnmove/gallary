@@ -7,7 +7,11 @@ from db_functions import str_to_dic
 
 db = sql.connect('test.db')
 cursor = db.cursor()
-
+'''
+文章分析程式，判斷並回傳該文章所屬之領域
+比如文章屬於政治、投資或生活、娛樂..等等
+建基於事先爬好的關鍵字資料庫
+'''
 #讀取關鍵字列表
 cursor.execute("select * from key_words where length(name)>1 order by val desc")
 key_words = {res[0]:{'val':res[1],'types':str_to_dic(res[2])} for res in cursor.fetchall()}
