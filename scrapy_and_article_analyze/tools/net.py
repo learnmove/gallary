@@ -6,7 +6,10 @@ if __name__=='__main__':
     sys.path.append('\\'.join(os.getcwd().split('\\')[:-1]))
 from tools.basic import exception
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36'}
-
+'''
+把requests跟BeautifulSoup的一些常用功能做簡寫and另立function
+以便使過程能夠被@exception監控
+'''
 @exception
 def session():#->session obj.
     return requests.Session()
