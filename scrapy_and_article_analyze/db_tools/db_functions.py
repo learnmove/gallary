@@ -95,14 +95,20 @@ def input_tempdic(tempdic,type,url,result):
 
 @exception
 def input_db(tempdic,cursor):
+    print('\ninput db..',end='\r')
     cursor.execute("select val from variable where name = 'total_amount'")
     total_amount=cursor.fetchone()[0]+tempdic['total_amount']
     cursor.execute("update variable set val={} where name='total_amount'".format(total_amount))
     
     key_words=tempdic['key_words']
-    for key,contant in key_words.items():
-        val=contant['val']
-        types_input=contant['types']
+    key_words_length = len(key_words)
+    key_words_count = 0
+    for key,content in key_words.items():
+        key_words_count+=1
+        print('input db..',round(key_words_count/key_words_length*100,2),'%',end='\r')
+        val=content['val']
+        if val==1:continue
+        types_input=content['types']
         cursor.execute("select * from key_words where name='{}'".format(key))
         result=cursor.fetchone()
         if result:
@@ -114,11 +120,12 @@ def input_db(tempdic,cursor):
             cursor.execute("update key_words set val={1},types='{2}' where name='{0}'".format(key,val,dic_to_str(types_input)))
         else:
             cursor.execute("insert into key_words values('{}',{},'{}')".format(key,val,dic_to_str(types_input)))
+        
 
     urls=tempdic['urls']
     for url,type_ in urls.items():
         cursor.execute("insert into urls values('{}','{}')".format(type_,url))
-    
+    print('\ninput finish.')
 @exception
 def dic_to_str(dic):
     return re.sub('[\{\}\' ]+','',str(dic))

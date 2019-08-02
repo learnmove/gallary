@@ -19,7 +19,8 @@ if __name__=='__main__':
                     "電影":"娛樂","時尚":"娛樂","網搜":"閒聊",
                     "電商":"投資","親子":"心情","房產雲":"投資",
                     "ET車雲":"娛樂","軍武":"政治","保險":"投資",
-                    "法律":"學術","直銷雲":"投資","探索":"生活"}
+                    "法律":"學術","直銷雲":"投資","探索":"生活",
+                    "運勢":"閒聊"}
 
     db = sql.connect('test.db')
     cursor = db.cursor()
@@ -29,7 +30,7 @@ if __name__=='__main__':
     temp_dic = {}
     counter = 0
     
-    thr(target=ettoday.start,args=(100000,que_scrapy,sem_scrapy)).start()
+    thr(target=ettoday.start,args=(1000000,que_scrapy,sem_scrapy)).start()
     print('scrapy already.')
     time.sleep(5)
     thr(target=mp_analyze,args=(que_scrapy,que_input)).start()
@@ -52,11 +53,10 @@ if __name__=='__main__':
             continue
         input_tempdic(temp_dic,category_dic[type],url,result)
         counter+=1
-        if counter>=1000:
-            print('\ninput db..')
+        if counter>=3000 or que_input.empty():
+            print('\n',counter,'datas to insert.')
             input_db(temp_dic,cursor)
             db.commit()
             counter=0
             temp_dic={}
-            print('\ninput finish.')
         

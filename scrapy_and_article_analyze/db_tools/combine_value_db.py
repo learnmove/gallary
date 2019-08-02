@@ -4,7 +4,7 @@ import sqlite3 as sql
 
 if __name__=='__main__':
 
-    db = sql.connect('mobile.db')
+    db = sql.connect('tech.db')
     cursor = db.cursor()
     cursor.execute("select val from variable where name='total_amount'")
     result=cursor.fetchone()[0]

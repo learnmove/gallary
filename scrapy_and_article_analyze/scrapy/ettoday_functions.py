@@ -7,7 +7,7 @@ from tools.basic import exception
 from tools import net
 import time
 
-mainurl = 'https://www.ettoday.net/'
+mainurl = 'https://www.ettoday.net'
 
 @exception
 def find_date(soup_obj):
@@ -62,7 +62,7 @@ def get_mtext(soup_obj):#->str
 @exception
 def date_generator(start_time=time.strftime("%Y-%m-%d", time.localtime())):
     cur_time = time.mktime(time.strptime(start_time,"%Y-%m-%d"))
-    newslist_url = mainurl + 'news/news-list-'
+    newslist_url = mainurl + '/news/news-list-'
     while cur_time > 1317657600:#這串數字代表為2011-10-4，為ettoday最早的新聞開始
         date = time.strftime("%Y-%m-%d-", time.localtime(cur_time))
         daily_url = newslist_url + date

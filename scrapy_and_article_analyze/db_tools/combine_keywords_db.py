@@ -2,6 +2,7 @@
 from tools.basic import exception
 import copy
 import sqlite3 as sql
+import re
 
 
 @exception
@@ -34,19 +35,15 @@ def str_to_dic(string):
 def db_get(table,keyword):
     cursor.execute("select * from {} where name = '{}'".format(table,keyword))
     result = cursor.fetchone()
-    if result:
-        print(result)
-        return result[1:]
+    if result:return result[1:]
 
 @exception
 def keyword_update(table,keyword,val,dic):
     cursor.execute("update {0} set val={2} ,types='{3}' where name='{1}'".format(table,keyword,val,dic_to_str(dic)))
-    db.commit()
 
 @exception
 def keyword_insert(table,keyword,val,dic):
     cursor.execute("insert into {0} values('{1}',{2},'{3}')".format(table,keyword,val,dic_to_str(dic)))
-    db.commit()
 
 @exception
 def dic_combine(dic1,dic2):#from 2 to 1
@@ -57,14 +54,18 @@ def dic_combine(dic1,dic2):#from 2 to 1
     return dic
 
 if __name__=='__main__':
-    db = sql.connect('mobile.db')
+    db = sql.connect('tech.db')
     cursor = db.cursor()
     cursor.execute('select * from key_words')
     result=cursor.fetchall()
+    total=len(result)
+    count=0
     db.close()
     db = sql.connect('test.db')
     cursor = db.cursor()
     for key,val,type_dic in result:
+        count+=1
+        print('input db..',round(count/total*100,2),'%',end='\r')
         #print(key,val,type_dic)
         keyword_plus(key,val,type_dic)
     db.commit()

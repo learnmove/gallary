@@ -38,7 +38,7 @@ def start(max_mount,que,sem):
                     thr_list=[]
             
     thr_list = []
-    for url in ettoday.date_generator('2019-06-13'):
+    for url in ettoday.date_generator('2017-10-03'):
         if counter[0] > max_mount:break
         if len(thr_list)<10:thr_list.append(newses(url,''))#各新聞串爬蟲啟動
         else:
