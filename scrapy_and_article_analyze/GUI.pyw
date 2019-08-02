@@ -4,7 +4,9 @@ Created on Sun Jul 14 14:18:27 2019
 
 @author: pipiching
 """
-
+'''
+被腰斬的UI
+'''
 import tkinter as tk
 import webbrowser
 
