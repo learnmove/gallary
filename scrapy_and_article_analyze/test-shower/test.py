@@ -2,7 +2,9 @@
 
 import sqlite3 as sql
 import re
-
+'''
+關鍵字權重測試功能
+'''
 def show(search_keys):
     db = sql.connect('test.db')
     cursor = db.cursor()
