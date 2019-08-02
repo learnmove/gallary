@@ -72,3 +72,4 @@ if __name__=='__main__':
     with open('fate-hunter.txt','r') as file:
         txt=file.read()
     dic = start(txt)
+    
