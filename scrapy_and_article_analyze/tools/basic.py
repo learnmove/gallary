@@ -6,6 +6,10 @@ from threading import Semaphore as sm
 sem = sm(30)
 
 def exception(func):
+    '''
+    把這個function當decorator掛在function前面
+    當發生exception可以輸出錯誤報告
+    '''
     def wrapper(*args , **kwargs):
         try:return func( *args , **kwargs)
         except Exception as exp:
@@ -31,6 +35,11 @@ def exception(func):
     return wrapper
 
 class basic_scrapy(thr):
+    '''
+    多線程爬蟲使用之基本型別
+    拿來繼承用的
+    僅使用在本次專案，要拿作他用需改寫
+    '''
     def __init__(self,url,type_):
         thr.__init__(self,name=url)
         self.url = url
